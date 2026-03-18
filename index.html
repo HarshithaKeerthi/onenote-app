@@ -816,7 +816,8 @@ gel("btn-share").onclick=function(){
   if(!activeNb)return;
   var nb=null,i;for(i=0;i<notebooks.length;i++){if(notebooks[i].id===activeNb){nb=notebooks[i];break;}}
   if(!nb)return;
-  var user=auth.currentUser,ownerName=user?(user.displayName||")":"";
+  var ownerName="";
+  if(user&&user.displayName){ownerName=user.displayName;}
   db.collection("shared").doc(activeNb).set({notebookId:activeNb,ownerId:uid,ownerName:ownerName,notebookName:nb.name,sharedAt:SV()});
   gel("share-inp").value=location.origin+location.pathname+"?share="+activeNb;
   gel("share-modal").classList.add("open");
