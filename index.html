@@ -66,13 +66,13 @@ option{background:var(--bg2)}
 #main{display:flex;flex:1;overflow:hidden;position:relative;z-index:1;min-height:0}
 
 /* Notebook panel */
-#nb-panel{width:180px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;background:rgba(4,20,40,0.8);backdrop-filter:blur(5px);transition:width .3s}
-#nb-panel.collapsed{width:0;overflow:hidden}
-.panel-hd{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--border)}
+#nb-panel{width:180px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;background:rgba(4,20,40,0.8);transition:width .3s;overflow:hidden}
+#nb-panel.collapsed{width:0}
+.panel-hd{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--border);flex-shrink:0;min-width:180px}
 .panel-hd span{font-size:.6rem;color:var(--hud);text-transform:uppercase;letter-spacing:2px;font-weight:600}
 .panel-add{background:none;border:1px solid var(--border);color:var(--text2);width:18px;height:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem;transition:all .2s}
-.panel-add:hover{border-color:var(--hud);color:var(--hud);box-shadow:var(--glow)}
-.panel-list{flex:1;overflow-y:auto}
+.panel-add:hover{border-color:var(--hud);color:var(--hud)}
+.panel-list{flex:1;overflow-y:auto;min-width:180px}
 .panel-list::-webkit-scrollbar{width:2px}
 .panel-list::-webkit-scrollbar-track{background:transparent}
 .panel-list::-webkit-scrollbar-thumb{background:var(--hud2)}
@@ -814,12 +814,9 @@ function showSR(results){
 // Share
 gel("btn-share").onclick=function(){
   if(!activeNb)return;
-  var nb=null,i;
-  for(i=0;i<notebooks.length;i++){if(notebooks[i].id===activeNb){nb=notebooks[i];break;}}
+  var nb=null,i;for(i=0;i<notebooks.length;i++){if(notebooks[i].id===activeNb){nb=notebooks[i];break;}}
   if(!nb)return;
-  var user=auth.currentUser;
-  var ownerName="";
-  if(user&&user.displayName){ownerName=user.displayName;}
+  var user=auth.currentUser,ownerName=user?(user.displayName||")":"";
   db.collection("shared").doc(activeNb).set({notebookId:activeNb,ownerId:uid,ownerName:ownerName,notebookName:nb.name,sharedAt:SV()});
   gel("share-inp").value=location.origin+location.pathname+"?share="+activeNb;
   gel("share-modal").classList.add("open");
